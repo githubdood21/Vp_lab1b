@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Add a book:</h2>
+<form id="EditBookForm" th:method="POST" th:action="@{/books/edit/{id} (id=${Book.getId()})}">
+  <ul>
+    <li>
+      <label for="Title">Book Title:</label>
+      <input type="text" required id="Title" th:value="${Book.getTitle()}" name="Title"/>
+    </li>
+    <li>
+      <label for="Genre">Book Genre:</label>
+      <input type="text" required id="Genre" th:value="${Book.getGenre()}" name="Genre"/>
+    </li>
+    <li>
+      <label for="Year">Book Year:</label>
+      <input type="number" required id="Year" th:value="${Book.getYear()}" step="1" max="2023" min="0" name="Year"/>
+    </li>
+    <li>
+      <label for="ISBN">Book ISBN:</label>
+      <input type="text" required id="ISBN" th:value="${Book.getIsbn()}" name="ISBN"/>
+    </li>
+    <li>
+      <label for="Store">Book Store:</label>
+      <select required id="Store" name="Store">
+        <option th:selected="${store.getId() == Book.getBookStore().getId()}" th:each="store : ${stores}" th:value="${store.getId()}">
+          <th:block th:text="${store.getName()}"></th:block>
+        </option>
+      </select>
+    </li>
+  </ul>
+  <input form="EditBookForm" type='submit' value='Submit'>
+</form>
+</body>
+</html>

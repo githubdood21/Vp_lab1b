@@ -31,7 +31,7 @@ public class BookListServlet extends HttpServlet {
         context.setVariable("test", 1);
         context.setVariable("Books", bookService.listBooks());
 
-        this.springTemplateEngine.process("listBooks.html", context, resp.getWriter());
+        this.springTemplateEngine.process("listBooksServlet.html", context, resp.getWriter());
     }
 
     @Override

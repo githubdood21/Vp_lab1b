@@ -40,7 +40,7 @@ public class BookDetails extends HttpServlet {
 
         context.setVariable("Book", book);
 
-        this.springTemplateEngine.process("bookDetails.html", context, resp.getWriter());
+        this.springTemplateEngine.process("bookDetailsServlet.html", context, resp.getWriter());
     }
 
     @Override

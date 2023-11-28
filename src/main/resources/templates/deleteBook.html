@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>Are you sure you want to delete <th:block th:text="${Book.getTitle()}"></th:block>?</p>
+
+<form id="YesDelete" th:method="POST" th:action="@{/books/delete/{id} (id=${Book.getId()})}">
+    <input form="YesDelete" type="submit" value="yes">
+</form>
+
+<form id="NoDelete" th:method="GET" th:action="@{/books}">
+    <input form="NoDelete" type="submit" value="no">
+</form>
+</body>
+</html>

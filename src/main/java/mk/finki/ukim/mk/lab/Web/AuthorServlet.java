@@ -38,7 +38,7 @@ public class AuthorServlet extends HttpServlet {
         context.setVariable("Authors", authorService.listAuthors());
         context.setVariable("Book", bookService.findBookByIsbn(isbn));
 
-        this.springTemplateEngine.process("authorList.html", context, resp.getWriter());
+        this.springTemplateEngine.process("authorListServlet.html", context, resp.getWriter());
     }
 
     @Override
