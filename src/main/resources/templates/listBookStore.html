@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <h1>Welcome to My Book Store</h1>
+</header>
+<main>
+    <h2>Choose Store:</h2>
+    <!-- Display radio buttons for each book,
+            the value should be the isbn
+            and the displayed text should be Title: <bookTitle>, Genre:<genre>, Year: <year> -->
+        <ul>
+            <li th:each="storo : ${BookStore}">
+                <th:block th:text="${storo.getName()}"></th:block>,
+                <th:block th:text="${storo.getAddress()}"></th:block>,
+                <th:block th:text="${storo.getCity()}"></th:block>,
+                <p>Books:</p>
+                <ul>
+                    <li th:each="book : ${storo.getBookList()}">
+                        <th:block th:text="${book.getTitle()}"></th:block>,
+                    </li>
+                </ul><br/>
+                <a th:href="@{'/bookstore/edit/{id}' (id=${storo.getId()})}">Edit</a>,
+                <a th:href="@{'/bookstore/delete/{id}' (id=${storo.getId()})}">Delete</a>,
+                <a th:href="@{'/bookstore/addbook/{id}' (id=${storo.getId()})}">Add a Book</a><br/>
+            </li>
+        </ul>
+    <a href="/bookstore/add">Add a BookStore</a>
+    <p th:if="${errormessage != null}" th:text="${errormessage}" style="color:red;"></p>
+</main>
+</body>
+</html>

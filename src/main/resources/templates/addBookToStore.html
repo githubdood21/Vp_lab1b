@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Add Book to <th:block th:text="${BookStore.getName()}"></th:block></h2>
+<!-- Display radio buttons for each book,
+        the value should be the isbn
+        and the displayed text should be Title: <bookTitle>, Genre:<genre>, Year: <year> -->
+<form id="AddBookToStoreForm" th:method="POST" th:action="@{/bookstore/addbook/{id} (id=${BookStore.getId()})}">
+    <label for="Book">Book Store:</label>
+    <select required id="Book" name="Book">
+        <option th:each="book : ${Books}" th:value="${book.getId()}">
+            <th:block th:text="${book.getTitle()}"></th:block>
+        </option>
+    </select>
+    <input form="AddBookToStoreForm" type='submit' value='Submit'>
+</form>
+</body>
+</html>

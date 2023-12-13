@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Editing review for book <th:block th:text="${Review.getBook().getTitle()}"></th:block>:</h2>
+<form id="EditReviewForm" th:method="POST" th:action="@{/review/edit/{id} (id=${Review.getBook().getId()})}">
+    <ul>
+        <li>
+            <label for="Score">Review score:</label>
+            <input type="number" required id="Score" min="0" th:value="${Review.getScore()}" max="5" step="1" name="Score"/>
+        </li>
+        <li>
+            <label for="Description">Review description:</label>
+            <input type="text" required id="Description" th:value="${Review.getDescription()}" name="Description"/>
+        </li>
+        <li>
+            <label for="Date">Review date:</label>
+            <input type="datetime-local" required id="Date" th:value="${Review.getTimestamp()}" name="Date"/>
+        </li>
+    </ul>
+    <input form="EditReviewForm" type='submit' value='Submit'>
+</form>
+</body>
+</html>

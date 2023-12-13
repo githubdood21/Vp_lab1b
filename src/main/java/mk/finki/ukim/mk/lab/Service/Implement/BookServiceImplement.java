@@ -3,9 +3,11 @@ package mk.finki.ukim.mk.lab.Service.Implement;
 import mk.finki.ukim.mk.lab.Model.Author;
 import mk.finki.ukim.mk.lab.Model.Book;
 import mk.finki.ukim.mk.lab.Model.BookStore;
-import mk.finki.ukim.mk.lab.Repository.AuthorRepository;
-import mk.finki.ukim.mk.lab.Repository.BookRepository;
-import mk.finki.ukim.mk.lab.Repository.BookStoreRepository;
+import mk.finki.ukim.mk.lab.Model.Review;
+import mk.finki.ukim.mk.lab.Repository.jpa.AuthorRepository;
+import mk.finki.ukim.mk.lab.Repository.jpa.BookRepository;
+import mk.finki.ukim.mk.lab.Repository.jpa.BookStoreRepository;
+import mk.finki.ukim.mk.lab.Repository.jpa.ReviewRepository;
 import mk.finki.ukim.mk.lab.Service.BookService;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +18,16 @@ import java.util.Optional;
 public class BookServiceImplement implements BookService {
 
     private final BookStoreRepository bookStoreRepository;
-    BookRepository bookRepository;
-    AuthorRepository authorRepository;
-    public BookServiceImplement(BookRepository bookRepository, AuthorRepository authorRepository, BookStoreRepository bookStoreRepository)
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final ReviewRepository reviewRepository;
+
+    public BookServiceImplement(BookRepository bookRepository, AuthorRepository authorRepository, BookStoreRepository bookStoreRepository, ReviewRepository reviewRepository)
     {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.bookStoreRepository = bookStoreRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -31,43 +36,50 @@ public class BookServiceImplement implements BookService {
         if(isbn.isEmpty() || title.isEmpty() || genre.isEmpty() || year == null || bookStoreId == null)
         {
             //throw error ama me mrzi
-            return new Book("","","",null);
+            return null;
         }
-        BookStore bs = bookStoreRepository.findbyId(bookStoreId);
-        if(bs == null)
+        Optional<BookStore> bs = bookStoreRepository.findById(bookStoreId);
+        if(bs.isEmpty())
         {
             //uste eden error
-            return new Book("","","",null);
+            return null;
         }
-        Book b = new Book(isbn, title, genre, year, bs);
-        bs.AddBook(b);
-        bookRepository.saveBook(b);
+        Book b = new Book(isbn, title, genre, year, bs.get());
+        bs.get().AddBook(b);
+        bookRepository.save(b);
         return b;
     }
 
     @Override
     public Book editBook(String isbn, String title, String genre, Integer year, Long bookStoreId, Long Id) {
-        Book origin = bookRepository.findById(Id);
-        if(origin == null || isbn.isEmpty() || title.isEmpty() || genre.isEmpty() || year == null || bookStoreId == null)
+        if(Id == null)
         {
             //throw error ama me mrzi
-            return new Book("","","",null);
+            return null;
         }
-        BookStore bs = bookStoreRepository.findbyId(bookStoreId);
-        if(bs == null)
+        Optional<Book> origin = bookRepository.findById(Id);
+        if(origin.isEmpty() || isbn.isEmpty() || title.isEmpty() || genre.isEmpty() || year == null || bookStoreId == null)
+        {
+            //throw error ama me mrzi
+            return null;
+        }
+        Optional<BookStore> bs = bookStoreRepository.findById(bookStoreId);
+        if(bs.isEmpty())
         {
             //uste eden error
-            return new Book("","","",null);
+            return null;
         }
-        origin.getBookStore().RemoveBook(origin);
+        origin.get().getBookStore().RemoveBook(origin.get());
 
-        origin.setIsbn(isbn);
-        origin.setTitle(title);
-        origin.setGenre(genre);
-        origin.setYear(year);
-        origin.setBookStore(bs);
+        origin.get().setIsbn(isbn);
+        origin.get().setTitle(title);
+        origin.get().setGenre(genre);
+        origin.get().setYear(year);
+        origin.get().setBookStore(bs.get());
 
-        return origin;
+        bookRepository.flush();
+
+        return origin.get();
     }
 
     @Override
@@ -77,13 +89,20 @@ public class BookServiceImplement implements BookService {
             //throw error
             return;
         }
-        Book b = bookRepository.findById(Id);
-        if(b == null)
+        Optional<Book> b = bookRepository.findById(Id);
+        if(b.isEmpty())
         {
             //throw error
             return;
         }
-        bookRepository.deleteBook(b);
+        b.get().getAuthors().forEach(x -> x.setBook(null));
+        reviewRepository.deleteAll(b.get().getReviews());
+        b.get().getBookStore().getBookList().removeIf(x -> x.getId().equals(b.get().getId()));
+        bookRepository.delete(b.get());
+
+        bookRepository.flush();
+        reviewRepository.flush();
+        bookStoreRepository.flush();
     }
 
     @Override
@@ -97,11 +116,30 @@ public class BookServiceImplement implements BookService {
         Book book = bookRepository.findByIsbn(isbn);
         if(author.isPresent() && book != null)
         {
-            return bookRepository.addAuthorToBook(author.get(), book);
+            book.getAuthors().removeIf(x -> x.getId().equals(author.get().getId()));
+            book.addAuthor(author.get());
+            author.get().AddBook(book);
+            bookRepository.flush();
+            authorRepository.flush();
+            return author.get();
         }
         return null;
     }
-
+    @Override
+    public Review addReviewToBook(Long reviewId, Long bookId) {
+        Optional<Review> review = reviewRepository.findById(reviewId);
+        Optional<Book> book = bookRepository.findById(bookId);
+        if(review.isPresent() && book.isPresent())
+        {
+            book.get().getReviews().removeIf(x -> x.getId().equals(review.get().getId()));
+            book.get().addReview(review.get());
+            review.get().addBook(book.get());
+            bookRepository.flush();
+            reviewRepository.flush();
+            return review.get();
+        }
+        return null;
+    }
     @Override
     public Book findBookByIsbn(String isbn) {
         return bookRepository.findByIsbn(isbn);
@@ -109,6 +147,11 @@ public class BookServiceImplement implements BookService {
 
     @Override
     public Book findBookById(Long id) {
-        return bookRepository.findById(id);
+        Optional<Book> book = bookRepository.findById(id);
+        if(book.isEmpty())
+        {
+            return null;
+        }
+        return book.get();
     }
 }

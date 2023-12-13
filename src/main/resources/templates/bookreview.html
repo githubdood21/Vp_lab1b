@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <h1>Viewing Review for book <th:block th:text="${Review.getBook().getTitle()}"></th:block>:</h1>
+</header>
+<section>
+    <h2>Review Time:</h2>
+    <th:block th:text="${Review.getTimestamp()}"></th:block>
+    <h2>Review Score:</h2>
+    <th:block th:text="${Review.getScore()}"></th:block>
+    <h2>Review Description:</h2>
+    <th:block th:text="${Review.getDescription()}"></th:block>
+</section>
+</body>
+</html>

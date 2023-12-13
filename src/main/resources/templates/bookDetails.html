@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <h1>Book title: <th:block th:text="${Book.getTitle()}"></th:block></h1>
+</header>
+<section>
+    <h2>Genre:</h2>
+    <th:block th:text="${Book.getGenre()}"></th:block>
+    <h2>Year:</h2>
+    <th:block th:text="${Book.getYear()}"></th:block>
+    <h2>Authors:</h2>
+    <ul>
+        <li th:each="Author : ${Book.getAuthors()}">
+            <th:block th:text="${Author.getName()}"></th:block>
+            <th:block th:text="${Author.getSurname()}"></th:block>
+        </li>
+    </ul>
+    <p>Reviews:</p>
+    <form id="FilterReviewForm" th:method="POST" th:action="@{/books/bookdetails/filter/{id} (id=${Book.getId()})}">
+        <label for="DateFrom">Filter from date:</label>
+        <input type="datetime-local" required id="DateFrom" name="DateFrom"/>
+
+        <label for="DateTo">Filter to date:</label>
+        <input type="datetime-local" required id="DateTo" name="DateTo"/>
+
+        <input form="FilterReviewForm" type='submit' value='Submit'>
+    </form>
+    <ul>
+        <li th:each="review : ${Book.getReviews()}">
+            Review: <th:block th:text="${review.getDescription()}"></th:block><br/>
+            Review score: <th:block th:text="${review.getScore()}"></th:block><br/>
+            Review Date: <th:block th:text="${#temporals.format(review.getTimestamp(), 'dd-MM-yyyy HH:mm:ss')}"></th:block><br/>
+            <a th:href="@{'/review/edit/{id}' (id=${review.getId()})}">Edit</a>,
+            <a th:href="@{'/review/delete/{id}' (id=${review.getId()})}">Delete</a><br/>
+        </li>
+    </ul>
+    <a th:href="@{'/review/add/{id}' (id=${Book.getId()})}">Add a Review</a>
+</section>
+</body>
+</html>

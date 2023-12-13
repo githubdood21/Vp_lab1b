@@ -27,6 +27,7 @@
                 <th:block th:text="${Book.getGenre()}"></th:block>,
                 <th:block th:text="${Book.getYear()}"></th:block>,
                 <th:block th:text="${Book.getBookStore().getName()}"></th:block>,
+                <a th:href="@{'/books/bookdetails/{id}' (id=${Book.getId()})}">Details</a>,
                 <a th:href="@{'/books/edit/{id}' (id=${Book.getId()})}">Edit</a>,
                 <a th:href="@{'/books/delete/{id}' (id=${Book.getId()})}">Delete</a><br/>
             </li>
@@ -34,6 +35,7 @@
         <input form="BookForm" type='submit' value='Submit'>
     </form>
     <a href="/books/add">Add a Book</a>
+    <a href="/bookstore">Go to Bookstores</a>
     <p th:if="${errormessage != null}" th:text="${errormessage}" style="color:red;"></p>
 </main>
 </body>

@@ -4,7 +4,6 @@ import jakarta.annotation.PostConstruct;
 import mk.finki.ukim.mk.lab.Model.Author;
 import mk.finki.ukim.mk.lab.Model.Book;
 import mk.finki.ukim.mk.lab.Model.BookStore;
-import mk.finki.ukim.mk.lab.Repository.AuthorRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

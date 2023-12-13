@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Add a review for book <th:block th:text="${Book.getTitle()}"></th:block>:</h2>
+<form id="AddReviewForm" th:method="POST" th:action="@{/review/add/{id} (id=${Book.getId()})}">
+    <ul>
+        <li>
+            <label for="Score">Review score:</label>
+            <input type="number" required id="Score" min="0" max="5" step="1" name="Score"/>
+        </li>
+        <li>
+            <label for="Description">Review description:</label>
+            <input type="text" required id="Description" name="Description"/>
+        </li>
+        <li>
+            <label for="Date">Review date:</label>
+            <input type="datetime-local" required id="Date" name="Date"/>
+        </li>
+    </ul>
+    <input form="AddReviewForm" type='submit' value='Submit'>
+</form>
+</body>
+</html>

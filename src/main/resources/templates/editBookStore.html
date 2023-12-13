@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="EditBookStoreForm" th:method="POST" th:action="@{/bookstore/edit/{id} (id=${BookStore.getId()})}">
+    <ul>
+        <li>
+            <label for="Name">Book Store Name:</label>
+            <input type="text" required id="Name" th:value="${BookStore.getName()}" name="Name"/>
+        </li>
+        <li>
+            <label for="City">Book Store City:</label>
+            <input type="text" required id="City" th:value="${BookStore.getCity()}" name="City"/>
+        </li>
+        <li>
+            <label for="Address">Book Store Address:</label>
+            <input type="text" required id="Address" th:value="${BookStore.getAddress()}" name="Address"/>
+        </li>
+    </ul>
+    <input form="EditBookStoreForm" type='submit' value='Submit'>
+</form>
+</body>
+</html>

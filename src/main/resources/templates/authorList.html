@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<header>
+    <h1>Select the Author to add to the Book </h1>
+    <h3>Selected Book is <th:block th:text="${Book.getTitle()}"></th:block></h3>
+</header>
+<section>
+    <h2>Select author:</h2>
+    <!-- Make changes to this code to dynamically display radio buttons for each author as in the example -->
+    <form  id="AuthorForm" th:method="POST" th:action="@{/books/bookdetails/{id} (id=${Book.getId()})}">
+        <ul>
+            <input type="hidden" name="BookSelect" th:value="${Book.getIsbn()}">
+            <li th:each="Author : ${Authors}">
+                <input type="radio" name="AuthorSelect" th:value="${Author.getId()}">
+                <th:block th:text="${Author.getName()}"></th:block>
+                <th:block th:text="${Author.getSurname()}"></th:block>,
+                <th:block th:text="${Author.getBiography()}"></th:block>,
+                <a th:href="@{'/author/edit/{id}' (id=${Book.getId()})}">Edit</a>,
+                <a th:href="@{'/author/delete/{id}' (id=${Book.getId()})}">Delete</a><br/>
+            </li>
+        </ul>
+    </form>
+
+    <br/>
+    <input form="AuthorForm" type='submit' value='Add author'>
+    <a href="/author/add">Add a Author</a>
+</section>
+<aside>
+    <table>
+        <tr>
+            <!-- change to show selected book isbn -->
+            <td><b>Book Isbn</b></td>
+            <td><th:block th:text="${Book.getIsbn()}"></th:block></td>
+        </tr>
+    </table>
+</aside>
+</html>

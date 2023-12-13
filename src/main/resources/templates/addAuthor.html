@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Add a author:</h2>
+<form id="AddAuthorForm" th:method="POST" th:action="@{/author/add}">
+    <ul>
+        <li>
+            <label for="Name">Author Name:</label>
+            <input type="text" required id="Name" name="Name"/>
+        </li>
+        <li>
+            <label for="Surname">Author Surname:</label>
+            <input type="text" required id="Surname" name="Surname"/>
+        </li>
+        <li>
+            <label for="Biography">Author Biography:</label>
+            <input type="text" required id="Biography" name="Biography"/>
+        </li>
+        <li>
+            <label for="Date">Author Date of Birth:</label>
+            <input type="date" required id="Date" name="Date"/>
+        </li>
+    </ul>
+    <input form="AddAuthorForm" type='submit' value='Submit'>
+</form>
+</body>
+</html>
