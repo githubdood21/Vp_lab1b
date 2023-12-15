@@ -2,6 +2,7 @@ package mk.finki.ukim.mk.lab.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import mk.finki.ukim.mk.lab.Model.Converter.AuthorFullnameConverter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -33,6 +34,8 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Convert(converter = AuthorFullnameConverter.class)
+    private AuthorFullname fullname;
     private String name;
     private String surname;
     private String biography;

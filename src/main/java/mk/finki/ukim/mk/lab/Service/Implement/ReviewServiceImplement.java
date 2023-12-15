@@ -10,8 +10,10 @@ import mk.finki.ukim.mk.lab.Service.ReviewService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImplement implements ReviewService {
@@ -71,6 +73,22 @@ public class ReviewServiceImplement implements ReviewService {
         reviewRepository.flush();
 
         return origin.get();
+    }
+
+    public List<Review> filterformtodate(Long bookId, LocalDateTime from, LocalDateTime to)
+    {
+        if(bookId == null || from == null || to == null)
+        {
+            return null;
+        }
+        Optional<Book> book = bookRepository.findById(bookId);
+        if(book.isEmpty())
+        {
+            return null;
+        }
+
+        return book.get().getReviews().stream().filter(x -> x.getTimestamp().isBefore(to)).filter(x -> x.getTimestamp().isAfter(from)).collect(Collectors.toList());
+
     }
 
     @Override

@@ -9,6 +9,7 @@ import mk.finki.ukim.mk.lab.Model.Review;
 import mk.finki.ukim.mk.lab.Service.Implement.AuthorServiceImplement;
 import mk.finki.ukim.mk.lab.Service.Implement.BookServiceImplement;
 import mk.finki.ukim.mk.lab.Service.Implement.BookStoreServiceImplement;
+import mk.finki.ukim.mk.lab.Service.Implement.ReviewServiceImplement;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +28,13 @@ public class BookController {
     private final AuthorServiceImplement authorServiceImplement;
     private final BookServiceImplement bookServiceImplement;
     private final BookStoreServiceImplement bookStoreServiceImplement;
+    private final ReviewServiceImplement reviewServiceImplement;
 
-    public BookController(AuthorServiceImplement authorServiceImplement, BookServiceImplement bookServiceImplement, BookStoreServiceImplement bookStoreServiceImplement) {
+    public BookController(AuthorServiceImplement authorServiceImplement, BookServiceImplement bookServiceImplement, BookStoreServiceImplement bookStoreServiceImplement, ReviewServiceImplement reviewServiceImplement) {
         this.authorServiceImplement = authorServiceImplement;
         this.bookServiceImplement = bookServiceImplement;
         this.bookStoreServiceImplement = bookStoreServiceImplement;
+        this.reviewServiceImplement = reviewServiceImplement;
     }
     @PostMapping("/bookdetails/filter/{id}")
     public String postBooksFilterDetailsPage(HttpServletRequest request, @RequestParam(required = false) String error, Model model, @PathVariable String id)
@@ -41,7 +44,7 @@ public class BookController {
         LocalDateTime from = LocalDateTime.parse(request.getParameter("DateFrom"));
         LocalDateTime to = LocalDateTime.parse(request.getParameter("DateTo"));
 
-        List<Review> filter = book.getReviews().stream().filter(x -> x.getTimestamp().isBefore(to)).filter(x -> x.getTimestamp().isAfter(from)).collect(Collectors.toList());
+        List<Review> filter = reviewServiceImplement.filterformtodate(book.getId(), from, to);
 
         book.setReviews(filter);
 

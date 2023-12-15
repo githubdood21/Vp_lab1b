@@ -40,6 +40,7 @@ public class Book {
     private String isbn;
     private String title;
     private String genre;
+    @Column(name = "book_year")
     private Integer year;
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private List<Author> authors;

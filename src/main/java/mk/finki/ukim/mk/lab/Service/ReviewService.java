@@ -12,5 +12,6 @@ public interface ReviewService {
     Review findReviewById(Long id);
     Review saveReview(Integer score, String description, LocalDateTime timestamp);
     Review editReview(Integer score, String description, LocalDateTime timestamp, Long Id);
+    public List<Review> filterformtodate(Long bookId, LocalDateTime from, LocalDateTime to);
     void deleteReview(Long Id);
 }
